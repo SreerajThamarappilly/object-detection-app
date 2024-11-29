@@ -1,0 +1,17 @@
+<!-- templates/results.html -->
+
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Detection Results</h1>
+    {% if filename.endswith(('jpg', 'jpeg', 'png')) %}
+    <img src="{{ url_for('send_file', filename=filename) }}" class="img-fluid" alt="Detected Image">
+    {% elif filename.endswith(('mp4', 'avi', 'mov')) %}
+    <video width="100%" controls>
+        <source src="{{ url_for('send_file', filename=filename) }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    {% endif %}
+    <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">Upload Another File</a>
+</div>
+{% endblock %}

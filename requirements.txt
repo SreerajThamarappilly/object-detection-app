@@ -1,0 +1,9 @@
+# requirements.txt
+
+Flask
+Flask-Bootstrap
+Werkzeug
+tensorflow
+opencv-python
+numpy
+Pillow
