@@ -4,6 +4,7 @@ import tensorflow as tf
 import numpy as np
 import cv2
 import os
+import time
 from utils import label_map_util
 from utils import visualization_utils as vis_util
 from PIL import Image
@@ -23,6 +24,7 @@ class ObjectDetector:
     def load_model(self):
         """Load the TensorFlow model into memory."""
         self.detection_model = tf.saved_model.load(self.model_name + '/saved_model')
+        self.infer = self.detection_model.signatures['serving_default']
 
     def load_label_map(self):
         """Load label maps."""
@@ -42,11 +44,12 @@ class ObjectDetector:
         """Perform object detection on an image."""
         image = Image.open(image_path)
         image_np = np.array(image)
+        # Prepare input tensor
         input_tensor = tf.convert_to_tensor(image_np)
         input_tensor = input_tensor[tf.newaxis, ...]
-        # Run detection
-        detections = self.detection_model(input_tensor)
-        # Visualization
+        # Run detection using the correct method
+        detections = self.infer(input_tensor)
+        # Process detections
         vis_util.visualize_boxes_and_labels_on_image_array(
             image_np,
             detections['detection_boxes'][0].numpy(),
@@ -55,8 +58,9 @@ class ObjectDetector:
             self.category_index,
             use_normalized_coordinates=True,
             line_thickness=8)
-        # Save the image
-        output_path = image_path.rsplit('.', 1)[0] + '_output.jpg'
+        # Save the image with a unique name
+        timestamp = int(time.time())
+        output_path = f"{image_path.rsplit('.', 1)[0]}_{timestamp}_output.jpg"
         output_image = Image.fromarray(image_np)
         output_image.save(output_path)
         return output_path
@@ -74,8 +78,8 @@ class ObjectDetector:
             # Convert frame to tensor
             input_tensor = tf.convert_to_tensor(frame)
             input_tensor = input_tensor[tf.newaxis, ...]
-            # Run detection
-            detections = self.detection_model(input_tensor)
+            # Run detection using the correct method
+            detections = self.infer(input_tensor)
             # Visualization
             vis_util.visualize_boxes_and_labels_on_image_array(
                 frame,

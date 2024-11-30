@@ -1,9 +1,11 @@
 # config.py
 
 import os
+import secrets
 
 class Config:
-    SECRET_KEY = 'your_secret_key'
+    """Configuration"""
+    SECRET_KEY = secrets.token_hex(16)
     UPLOAD_FOLDER = os.path.join('static', 'uploads')
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'mp4', 'avi', 'mov'}
     MODEL_NAME = 'models/ssd_mobilenet_v2_coco_2018_03_29'

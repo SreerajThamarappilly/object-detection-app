@@ -130,7 +130,9 @@ def convert_label_map_to_categories(label_map,
     if item.id not in list_of_ids_already_added:
       list_of_ids_already_added.append(item.id)
       category = {'id': item.id, 'name': name}
-      if item.HasField('frequency'):
+      known_fields = {'frequency', 'instance_count'}
+      print("Item fields:", [field.name for field in item.DESCRIPTOR.fields])
+      if hasattr(item, 'frequency') and item.HasField('frequency') and item.frequency not in known_fields:
         if item.frequency == string_int_label_map_pb2.LVISFrequency.Value(
             'FREQUENT'):
           category['frequency'] = 'f'
@@ -140,9 +142,11 @@ def convert_label_map_to_categories(label_map,
         elif item.frequency == string_int_label_map_pb2.LVISFrequency.Value(
             'RARE'):
           category['frequency'] = 'r'
-      if item.HasField('instance_count'):
+        else:
+          continue
+      if hasattr(item, 'instance_count') and item.HasField('instance_count'):
         category['instance_count'] = item.instance_count
-      if item.keypoints:
+      if hasattr(item, 'keypoints') and item.keypoints:
         keypoints = {}
         list_of_keypoint_ids = []
         for kv in item.keypoints:
