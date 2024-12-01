@@ -4,15 +4,21 @@ body {
     background-color: #f8f9fa;
 }
 
-.container {
-    margin-top: 50px;
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
 }
 
-img {
-    max-width: 100%;
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.img-fluid {
+    max-width: 80%;
     height: auto;
-}
-
-.btn {
-    margin-top: 20px;
 }
