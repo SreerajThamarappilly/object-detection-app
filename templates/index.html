@@ -1,0 +1,37 @@
+<!-- templates/index.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="text-center">
+        <h1 class="text-center mb-4">Object Detection App</h1>
+
+        <!-- Custom "Choose File" Button -->
+        <button id="customChooseFileButton" class="btn btn-primary mb-3">Choose File</button>
+        
+        <!-- Hidden File Input -->
+        <form id="uploadForm" method="post" action="{{ url_for('upload') }}" enctype="multipart/form-data" style="display: none;">
+            <div class="form-group">
+                <input type="file" id="hiddenFileInput" name="file" class="d-none" required>
+                <p id="selectedFileName" class="mt-2"></p>
+            </div>
+            <button type="submit" class="btn btn-success btn-block mt-3">Upload and Detect Objects</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('customChooseFileButton').addEventListener('click', function () {
+        document.getElementById('hiddenFileInput').click(); // Trigger the hidden file input
+    });
+
+    document.getElementById('hiddenFileInput').addEventListener('change', function () {
+        const fileName = this.files[0]?.name || ''; // Get the selected file name
+        if (fileName) {
+            document.getElementById('selectedFileName').textContent = `Selected File: ${fileName}`;
+            document.getElementById('uploadForm').style.display = 'block'; // Show the upload form
+        }
+    });
+</script>
+{% endblock %}
